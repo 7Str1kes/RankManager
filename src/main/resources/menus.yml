@@ -1,0 +1,24 @@
+GRANTS:
+  TITLE: "&aRanks of &e<player>"
+  SIZE: 27
+  ITEMS:
+    RANK_ITEM:
+      MATERIAL: "BOOK"
+      NAME: "<suffix>"
+      LORE:
+        - ""
+        - "&7» &eDuration: &f<duration>"
+        - ""
+        - "&7» &ePrefix: &f<prefix>"
+        - "&7» &eSuffix: &f<suffix>"
+PERMS:
+  TITLE: "&dPermissions of &e<player>"
+  SIZE: 27
+  ITEMS:
+    PERMISSION_ITEM:
+      MATERIAL: "BOOK"
+      NAME: "&ePermission: &f<permission>"
+      LORE:
+        - ""
+        - "&7» &eDuration: <duration>"
+        - ""

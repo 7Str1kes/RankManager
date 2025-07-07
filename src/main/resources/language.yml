@@ -1,0 +1,10 @@
+GLOBAL:
+  NOT_PLAYER: "&cYou must be a player to do this!"
+  NO_PERMISSION: "&cYou do not have permission to do this!"
+  PLAYER_NOT_FOUND: "&cPlayer not found!"
+  DATA_NOT_FOUND: "&c<player> does not have any data!"
+
+PLACEHOLDERS:
+  PERMANENT: "&aPermanent"
+  NO_PREFIX: "&cNo Prefix"
+  NO_SUFFIX: "&cNo Suffix"
