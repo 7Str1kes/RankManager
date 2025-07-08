@@ -28,7 +28,7 @@ RANKS:
   ITEMS:
     RANK_ITEM:
       MATERIAL: "BOOK"
-      NAME: "<name>"
+      NAME: "<prefix>"
       LORE:
         - ""
         - "&7» &ePrefix: &f<prefix>"
@@ -37,11 +37,11 @@ RANKS:
         - ""
 MAIN:
   TITLE: "&aMain Menu"
-  SIZE: 34
+  SIZE: 27
   ITEMS:
     RANKS_ITEM:
       MATERIAL: "BOOK"
-      SLOT: 13
+      SLOT: 11
       NAME: "&aOpen Ranks Menu"
       LORE:
         - ""

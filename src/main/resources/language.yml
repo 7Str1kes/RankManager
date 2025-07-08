@@ -30,3 +30,7 @@ DEMOTE_CMD:
   NO_RANKS: "&b<player> &ehas no ranks to be demoted from the list."
   DEMOTED: "&eYou have been demoted from your ranks by &b<player>&e."
   TARGET_DEMOTED: "&eYou have successfully demoted &b<player> &efrom their ranks."
+
+PERMS_CMD:
+  USAGE:
+    - "&cUsage: /perminfo <player>"
