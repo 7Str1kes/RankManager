@@ -10,10 +10,7 @@ import net.luckperms.api.node.Node;
 import net.luckperms.api.node.types.InheritanceNode;
 import org.bukkit.entity.Player;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 /*
  * RankManager | RankManager
@@ -32,144 +29,128 @@ public class RankManager extends Manager {
         super(main);
     }
 
-    public void promotePlayer(Player player, Player target) {
-        if (rankList.isEmpty()) {
-            player.sendMessage(CC.t(getLanguageFile().getString("GLOBAL.NO_RANKS")));
-            return;
-        }
+    public void promotePlayer(Player sender, Player target) {
+        if (!hasRanks(sender)) return;
 
-        Collections.reverse(rankList);
+        User user = getUserOrMsg(sender, target);
+        if (user == null) return;
 
-        UUID targetUUID = target.getUniqueId();
-        User user = luckPermsUtil.getUserManager().getUser(targetUUID);
-
-        if (user == null) {
-            player.sendMessage(CC.t(getLanguageFile().getString("GLOBAL.DATA_NOT_FOUND")));
-            return;
-        }
-
-        Optional<String> currentRank = user.getNodes().stream()
-                .filter(node -> node.getKey().startsWith("group."))
-                .map(node -> node.getKey().replace("group.", ""))
-                .filter(rankList::contains)
-                .findFirst();
+        Optional<String> current = getCurrentRank(user);
+        List<String> reversed = new ArrayList<>(rankList);
+        Collections.reverse(reversed);
 
         String newRank;
 
-        if (currentRank.isPresent()) {
-            int index = rankList.indexOf(currentRank.get());
-            if (index == rankList.size() - 1) {
-                player.sendMessage(CC.t(getLanguageFile().getString("PROMOTE_CMD.MAX_RANK")
-                        .replace("<player>", target.getName())));
+        if (current.isPresent()) {
+            int index = reversed.indexOf(current.get());
+            if (index == reversed.size() - 1) {
+                sendLang(sender, "PROMOTE_CMD.MAX_RANK", target);
                 return;
             }
-            newRank = rankList.get(index + 1);
+            newRank = reversed.get(index + 1);
         } else {
-            newRank = rankList.get(0);
+            newRank = reversed.getFirst();
             user.data().remove(InheritanceNode.builder("default").build());
         }
 
-        currentRank.ifPresent(rank -> user.data().remove(InheritanceNode.builder(rank).build()));
-
+        current.ifPresent(rank -> user.data().remove(InheritanceNode.builder(rank).build()));
         user.data().add(InheritanceNode.builder(newRank).build());
-
         luckPermsUtil.getUserManager().saveUser(user);
 
-        player.sendMessage(CC.t(getLanguageFile().getString("PROMOTE_CMD.TARGET_PROMOTED")
-                .replace("<player>", target.getName())
-                .replace("<rank>", newRank)));
-        target.sendMessage(CC.t(getLanguageFile().getString("PROMOTE_CMD.PROMOTED")
-                .replace("<player>", player.getName())
-                .replace("<rank>", newRank)));
+        sendLang(sender, "PROMOTE_CMD.TARGET_PROMOTED", target, newRank);
+        sendLang(target, "PROMOTE_CMD.PROMOTED", sender, newRank);
     }
 
-    public void downgradePlayer(Player player, Player target) {
-        if (rankList.isEmpty()) {
-            player.sendMessage(CC.t(getLanguageFile().getString("GLOBAL.NO_RANKS")));
+    public void downgradePlayer(Player sender, Player target) {
+        if (!hasRanks(sender)) return;
+
+        User user = getUserOrMsg(sender, target);
+        if (user == null) return;
+
+        Optional<String> current = getCurrentRank(user);
+        if (current.isEmpty()) {
+            sendLang(sender, "DOWNGRADE_CMD.MIN_RANK", target);
             return;
         }
 
-        UUID targetUUID = target.getUniqueId();
-        User user = luckPermsUtil.getUserManager().getUser(targetUUID);
-
-        if (user == null) {
-            player.sendMessage(CC.t(getLanguageFile().getString("GLOBAL.DATA_NOT_FOUND")));
+        int index = rankList.indexOf(current.get());
+        if (index == rankList.size() - 1) {
+            sendLang(sender, "DOWNGRADE_CMD.MIN_RANK", target);
             return;
         }
 
-        Optional<String> currentRank = user.getNodes().stream()
-                .filter(node -> node.getKey().startsWith("group."))
-                .map(node -> node.getKey().replace("group.", ""))
-                .filter(rankList::contains)
-                .findFirst();
-
-        String newRank;
-
-        if (currentRank.isPresent()) {
-            int index = rankList.indexOf(currentRank.get());
-
-            if (index == rankList.size() - 1) {
-                player.sendMessage(CC.t(getLanguageFile().getString("DOWNGRADE_CMD.MIN_RANK")
-                        .replace("<player>", target.getName())));
-                return;
-            }
-
-            newRank = rankList.get(index + 1);
-            currentRank.ifPresent(rank -> user.data().remove(InheritanceNode.builder(rank).build()));
-            user.data().add(InheritanceNode.builder(newRank).build());
-        } else {
-            player.sendMessage(CC.t(getLanguageFile().getString("DOWNGRADE_CMD.MIN_RANK")
-                    .replace("<player>", target.getName())));
-            return;
-        }
-
+        String newRank = rankList.get(index + 1);
+        user.data().remove(InheritanceNode.builder(current.get()).build());
+        user.data().add(InheritanceNode.builder(newRank).build());
         luckPermsUtil.getUserManager().saveUser(user);
 
-        player.sendMessage(CC.t(getLanguageFile().getString("DOWNGRADE_CMD.TARGET_DOWNGRADED")
-                .replace("<player>", target.getName())
-                .replace("<rank>", newRank)));
-        target.sendMessage(CC.t(getLanguageFile().getString("DOWNGRADE_CMD.TARGET_DOWNGRADED")
-                .replace("<player>", player.getName())
-                .replace("<rank>", newRank)));
+        sendLang(sender, "DOWNGRADE_CMD.TARGET_DOWNGRADED", target, newRank);
+        sendLang(target, "DOWNGRADE_CMD.TARGET_DOWNGRADED", sender, newRank);
     }
 
-    public void demotePlayer(Player player, Player target) {
-        if (rankList.isEmpty()) {
-            player.sendMessage(CC.t(getLanguageFile().getString("GLOBAL.NO_RANKS")));
-            return;
-        }
+    public void demotePlayer(Player sender, Player target) {
+        if (!hasRanks(sender)) return;
 
-        UUID targetUUID = target.getUniqueId();
-        User user = luckPermsUtil.getUserManager().getUser(targetUUID);
+        User user = getUserOrMsg(sender, target);
+        if (user == null) return;
 
-        if (user == null) {
-            player.sendMessage(CC.t(getLanguageFile().getString("GLOBAL.DATA_NOT_FOUND")));
-            return;
-        }
-
-        boolean removedAnyRank = false;
+        boolean removed = false;
         for (Node node : user.getNodes()) {
             if (node.getKey().startsWith("group.")) {
-                String rank = node.getKey().replace("group.", "");
-
+                String rank = node.getKey().substring(6);
                 if (rankList.contains(rank)) {
                     user.data().remove(node);
-                    removedAnyRank = true;
+                    removed = true;
                 }
             }
         }
 
-        if (!removedAnyRank) {
-            player.sendMessage(CC.t(getLanguageFile().getString("DEMOTE_CMD.NO_RANKS")
-                    .replace("<player>", target.getName())));
+        if (!removed) {
+            sendLang(sender, "DEMOTE_CMD.NO_RANKS", target);
             return;
         }
 
         luckPermsUtil.getUserManager().saveUser(user);
+        sendLang(sender, "DEMOTE_CMD.TARGET_DEMOTED", target);
+        sendLang(target, "DEMOTE_CMD.DEMOTED", sender);
+    }
 
-        player.sendMessage(CC.t(getLanguageFile().getString("DEMOTE_CMD.TARGET_DEMOTED")
-                .replace("<player>", target.getName())));
-        target.sendMessage(CC.t(getLanguageFile().getString("DEMOTE_CMD.DEMOTED")
-                .replace("<player>", target.getName())));
+    private Optional<String> getCurrentRank(User user) {
+        return user.getNodes().stream()
+                .filter(node -> node.getKey().startsWith("group."))
+                .map(node -> node.getKey().substring(6))
+                .filter(rankList::contains)
+                .findFirst();
+    }
+
+    private User getUserOrMsg(Player sender, Player target) {
+        User user = luckPermsUtil.getUserManager().getUser(target.getUniqueId());
+        if (user == null) {
+            sendLang(sender, "GLOBAL.DATA_NOT_FOUND");
+        }
+        return user;
+    }
+
+    private boolean hasRanks(Player sender) {
+        if (rankList.isEmpty()) {
+            sendLang(sender, "GLOBAL.NO_RANKS");
+            return false;
+        }
+        return true;
+    }
+
+    private void sendLang(Player player, String path) {
+        player.sendMessage(CC.t(getLanguageFile().getString(path)));
+    }
+
+    private void sendLang(Player player, String path, Player other) {
+        player.sendMessage(CC.t(getLanguageFile().getString(path)
+                .replace("<player>", other.getName())));
+    }
+
+    private void sendLang(Player player, String path, Player other, String rank) {
+        player.sendMessage(CC.t(getLanguageFile().getString(path)
+                .replace("<player>", other.getName())
+                .replace("<rank>", rank)));
     }
 }

@@ -54,6 +54,10 @@ public class MainMenu extends Menu {
                     Manager.getConfigFile().reload();
                     Manager.getLanguageFile().reload();
                     Manager.getMenusFile().reload();
+
+                    player.sendMessage(CC.t("&aArchivo &fconfig.yml &arecargado con éxito."));
+                    player.sendMessage(CC.t("&aArchivo &flanguage.yml &arecargado con éxito."));
+                    player.sendMessage(CC.t("&aArchivo &fmenus.yml &arecargado con éxito."));
                 })
         );
 

@@ -23,6 +23,7 @@ public class CommandRegistry {
                 new MainCommand(manager),
                 new GrantsCmd(manager),
                 new PermsCmd(manager),
+                new RanksCommand(manager),
                 new PromoteCmd(manager),
                 new DowngradeCmd(manager),
                 new DemoteCmd(manager)
