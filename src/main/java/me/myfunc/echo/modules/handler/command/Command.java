@@ -49,7 +49,9 @@ public abstract class Command extends Module<CommandManager> {
         return Manager.getLanguageFile();
     }
 
-    public abstract List<String> tabComplete(CommandSender sender, String[] args);
+    protected  ConfigFile getMenusFile() {
+        return Manager.getMenusFile();
+    }
 
     public abstract List<String> aliases();
 

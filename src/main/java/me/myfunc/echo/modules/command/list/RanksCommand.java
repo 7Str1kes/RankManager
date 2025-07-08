@@ -3,28 +3,24 @@ package me.myfunc.echo.modules.command.list;
 import me.myfunc.echo.modules.handler.command.Command;
 import me.myfunc.echo.modules.handler.command.CommandManager;
 import me.myfunc.echo.modules.menu.GrantsMenu;
-import me.myfunc.echo.utilities.CC;
-import me.myfunc.echo.utilities.LuckPermsUtil;
-import net.luckperms.api.model.user.User;
+import me.myfunc.echo.modules.menu.RanksMenu;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.List;
 
 /*
- * RankManager | GrantsCmd
+ * RankManager | RanksCommand
  *
  * @author 7Str1kes
- * @date 07/07/2025
+ * @date 08/07/2025
  *
  * Copyright (c) 2025 7Str1kes. All rights reserved.
  */
-public class GrantsCmd extends Command {
+public class RanksCommand extends Command {
 
-    private final LuckPermsUtil luckPermsUtil = getMain().getLuckPermsUtil();
-
-    public GrantsCmd(CommandManager manager) {
-        super(manager, "grants", "rankmanager.grants");
+    public RanksCommand(CommandManager manager) {
+        super(manager, "ranks", "rankmanager.ranks");
     }
 
     @Override
@@ -34,7 +30,7 @@ public class GrantsCmd extends Command {
 
     @Override
     public List<String> usage() {
-        return getLanguageFile().getStringList("GRANTS_CMD.USAGE");
+        return List.of();
     }
 
     @Override
@@ -49,21 +45,6 @@ public class GrantsCmd extends Command {
             return;
         }
 
-        if (args.length == 0) {
-            sendUsage(player);
-            return;
-        }
-
-        String targetName = args[0];
-
-        User user = luckPermsUtil.getUser(targetName);
-
-        if (user == null) {
-            player.sendMessage(CC.t(getLanguageFile().getString("GLOBAL.DATA_NOT_FOUND"))
-                    .replace("<player>", targetName));
-            return;
-        }
-
-        new GrantsMenu(getMain().getMenuManager(), player, user).open();
+        new RanksMenu(getMain().getMenuManager(), player).open();
     }
 }

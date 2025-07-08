@@ -48,11 +48,23 @@ public class PermsMenu extends Menu {
         Map<Integer, Button> buttons = new HashMap<>();
 
         List<Node> nodes = targetUser.getNodes().stream()
+                .filter(node -> !node.hasExpiry() || node.getExpiry().isAfter(Instant.now()))
                 .filter(node -> !node.getKey().startsWith("group."))
                 .toList();
 
         int size = ((nodes.size() - 1) / 9 + 1) * 9;
         this.setSize(size);
+
+        String path = "PERMS.ITEMS.PERMISSION_ITEM";
+        String materialName = Manager.getMenusFile().getString(path + ".MATERIAL");
+        Material material = Material.getMaterial(materialName);
+        if (material == null) {
+            material = Material.BOOK;
+            getMain().getLogHandler().logWarn("Invalid material: " + materialName + " in perms menu.");
+        }
+
+        String nameTemplate = Manager.getMenusFile().getString(path + ".NAME");
+        List<String> loreTemplate = Manager.getMenusFile().getStringList(path + ".LORE");
 
         int i = 0;
         for (Node node : nodes) {
@@ -63,27 +75,18 @@ public class PermsMenu extends Menu {
                     ? lpUtil.getDurationString(Duration.between(Instant.now(), node.getExpiry()))
                     : Manager.getLanguageFile().getString("PLACEHOLDERS.PERMANENT");
 
-            String path = "PERMS.ITEMS.PERMISSION_ITEM";
+            String name = nameTemplate.replace("<permission>", permission);
 
-            String materialName = Manager.getMenusFile().getString(path + ".MATERIAL");
-            Material material = Material.getMaterial(materialName);
-            if (material == null) {
-                material = Material.BOOK;
-                getMain().getLogHandler().logWarn("Invalid material: " + materialName + " in perms menu.");
-            }
-
-            String name = Manager.getMenusFile().getString(path + ".NAME")
-                    .replace("<permission>", permission);
-
-            List<String> lore = Manager.getMenusFile().getStringList(path + ".LORE").stream()
+            List<String> lore = loreTemplate.stream()
                     .map(line -> line
                             .replace("<permission>", permission)
                             .replace("<duration>", duration))
+                    .map(CC::t)
                     .toList();
 
             ItemStack item = new ItemBuilder(material)
-                    .setName(name)
-                    .setLore(CC.t(lore))
+                    .setName(CC.t(name))
+                    .setLore(lore)
                     .toItemStack();
 
             buttons.put(i++, new Button() {

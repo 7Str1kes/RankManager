@@ -2,8 +2,7 @@ package me.myfunc.echo.modules.handler.command;
 
 import me.myfunc.echo.Ranks;
 import me.myfunc.echo.modules.command.MainCommand;
-import me.myfunc.echo.modules.command.list.GrantsCmd;
-import me.myfunc.echo.modules.command.list.PermsCmd;
+import me.myfunc.echo.modules.command.list.*;
 
 import java.util.Arrays;
 
@@ -23,7 +22,10 @@ public class CommandRegistry {
         Arrays.asList(
                 new MainCommand(manager),
                 new GrantsCmd(manager),
-                new PermsCmd(manager)
+                new PermsCmd(manager),
+                new PromoteCmd(manager),
+                new DowngradeCmd(manager),
+                new DemoteCmd(manager)
         ).forEach(manager::register);
     }
 }

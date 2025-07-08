@@ -12,7 +12,7 @@ GRANTS:
         - "&7» &ePrefix: &f<prefix>"
         - "&7» &eSuffix: &f<suffix>"
 PERMS:
-  TITLE: "&dPermissions of &e<player>"
+  TITLE: "&aPermissions of &e<player>"
   SIZE: 27
   ITEMS:
     PERMISSION_ITEM:
@@ -22,3 +22,34 @@ PERMS:
         - ""
         - "&7» &eDuration: <duration>"
         - ""
+RANKS:
+  TITLE: "&aAll ranks"
+  SIZE: 54
+  ITEMS:
+    RANK_ITEM:
+      MATERIAL: "BOOK"
+      NAME: "<name>"
+      LORE:
+        - ""
+        - "&7» &ePrefix: &f<prefix>"
+        - "&7» &eSuffix: &f<suffix>"
+        - "&7» &eWeight: &f<weight>"
+        - ""
+MAIN:
+  TITLE: "&aMain Menu"
+  SIZE: 34
+  ITEMS:
+    RANKS_ITEM:
+      MATERIAL: "BOOK"
+      SLOT: 13
+      NAME: "&aOpen Ranks Menu"
+      LORE:
+        - ""
+        - "&7» &eClick to open the ranks menu"
+    RELOAD_ITEM:
+      MATERIAL: "BOOK"
+      SLOT: 15
+      NAME: "&aReload all config files"
+      LORE:
+        - ""
+        - "&7» &eClick to reload all configuration files"

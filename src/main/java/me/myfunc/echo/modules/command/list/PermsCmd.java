@@ -28,11 +28,6 @@ public class PermsCmd extends Command {
     }
 
     @Override
-    public List<String> tabComplete(CommandSender sender, String[] args) {
-        return List.of();
-    }
-
-    @Override
     public List<String> aliases() {
         return List.of();
     }

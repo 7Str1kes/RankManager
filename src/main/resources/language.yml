@@ -3,8 +3,30 @@ GLOBAL:
   NO_PERMISSION: "&cYou do not have permission to do this!"
   PLAYER_NOT_FOUND: "&cPlayer not found!"
   DATA_NOT_FOUND: "&c<player> does not have any data!"
+  NO_RANKS: "&cNo ranks have been configured. Please check the config file."
 
 PLACEHOLDERS:
   PERMANENT: "&aPermanent"
   NO_PREFIX: "&cNo Prefix"
   NO_SUFFIX: "&cNo Suffix"
+
+PROMOTE_CMD:
+  USAGE:
+    - "&cUsage: /promote <player>"
+  MAX_RANK: "&b<player> &ealready has the highest rank."
+  PROMOTED: "&eYou have been promoted to &b<rank> &eby &b<player>&e!"
+  TARGET_PROMOTED: "&eYou have successfully promoted &b<player> &eto &b<rank>&e."
+
+DOWNGRADE_CMD:
+  USAGE:
+    - "&cUsage: /downgrade <player>"
+  MIN_RANK: "&b<player> &ealready has the lowest rank."
+  DOWNGRADED: "&eYou have been downgraded to &b<rank> &eby &b<player>&e."
+  TARGET_DOWNGRADED: "&eYou have successfully downgraded &b<player> &eto &b<rank>&e!"
+
+DEMOTE_CMD:
+  USAGE:
+    - "&cUsage: /demote <player>"
+  NO_RANKS: "&b<player> &ehas no ranks to be demoted from the list."
+  DEMOTED: "&eYou have been demoted from your ranks by &b<player>&e."
+  TARGET_DEMOTED: "&eYou have successfully demoted &b<player> &efrom their ranks."

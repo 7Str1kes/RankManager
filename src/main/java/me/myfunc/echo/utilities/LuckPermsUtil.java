@@ -125,4 +125,8 @@ public class LuckPermsUtil {
 
         return sb.toString().trim();
     }
+
+    public List<Group> getLoadedGroups() {
+        return new ArrayList<>(luckPerms.getGroupManager().getLoadedGroups());
+    }
 }

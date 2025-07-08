@@ -2,29 +2,25 @@ package me.myfunc.echo.modules.command.list;
 
 import me.myfunc.echo.modules.handler.command.Command;
 import me.myfunc.echo.modules.handler.command.CommandManager;
-import me.myfunc.echo.modules.menu.GrantsMenu;
-import me.myfunc.echo.utilities.CC;
-import me.myfunc.echo.utilities.LuckPermsUtil;
-import net.luckperms.api.model.user.User;
+import me.myfunc.echo.modules.manager.RankManager;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.List;
 
 /*
- * RankManager | GrantsCmd
+ * RankManager | PromoteCmd
  *
  * @author 7Str1kes
  * @date 07/07/2025
  *
  * Copyright (c) 2025 7Str1kes. All rights reserved.
  */
-public class GrantsCmd extends Command {
+public class PromoteCmd extends Command {
 
-    private final LuckPermsUtil luckPermsUtil = getMain().getLuckPermsUtil();
-
-    public GrantsCmd(CommandManager manager) {
-        super(manager, "grants", "rankmanager.grants");
+    public PromoteCmd(CommandManager manager) {
+        super(manager, "promote", "rankmanager.promote");
     }
 
     @Override
@@ -34,7 +30,7 @@ public class GrantsCmd extends Command {
 
     @Override
     public List<String> usage() {
-        return getLanguageFile().getStringList("GRANTS_CMD.USAGE");
+        return getLanguageFile().getStringList("PROMOTE_CMD.USAGE");
     }
 
     @Override
@@ -54,16 +50,13 @@ public class GrantsCmd extends Command {
             return;
         }
 
-        String targetName = args[0];
-
-        User user = luckPermsUtil.getUser(targetName);
-
-        if (user == null) {
-            player.sendMessage(CC.t(getLanguageFile().getString("GLOBAL.DATA_NOT_FOUND"))
-                    .replace("<player>", targetName));
+        Player target = Bukkit.getPlayer(args[0]);
+        if (target == null) {
+            sendMessage(player, getLanguageFile().getString("GLOBAL.PLAYER_NOT_FOUND"));
             return;
         }
 
-        new GrantsMenu(getMain().getMenuManager(), player, user).open();
+        RankManager rankManager = getMain().getRankManager();
+        rankManager.promotePlayer(player, target);
     }
 }

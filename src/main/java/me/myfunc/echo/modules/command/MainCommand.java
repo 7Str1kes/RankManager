@@ -2,6 +2,8 @@ package me.myfunc.echo.modules.command;
 
 import me.myfunc.echo.modules.handler.command.Command;
 import me.myfunc.echo.modules.handler.command.CommandManager;
+import me.myfunc.echo.modules.menu.MainMenu;
+import me.myfunc.echo.modules.menu.RanksMenu;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -22,23 +24,8 @@ public class MainCommand extends Command {
     }
 
     @Override
-    public List<String> tabComplete(CommandSender sender, String[] args) {
-        if (args.length == 1) {
-            return List.of("reload");
-        }
-
-        if (args.length == 2 && args[0].equalsIgnoreCase("reload")) {
-            return getManager().getFiles().stream()
-                    .map(file -> file.getName().replace(".yml", ""))
-                    .toList();
-        }
-
-        return List.of();
-    }
-
-    @Override
     public List<String> aliases() {
-        return List.of("rm", "rankmanage", "manageranks");
+        return List.of("rm");
     }
 
     @Override
@@ -59,7 +46,7 @@ public class MainCommand extends Command {
         }
 
         if (args.length == 0) {
-            sendUsage(player);
+            new MainMenu(getMain().getMenuManager(), player).open();
             return;
         }
 
@@ -68,7 +55,7 @@ public class MainCommand extends Command {
         switch (action) {
             case "reload" -> {
                 if (args.length < 2) {
-                    sendMessage(player, "&eUsage: /echograves reload <configFile>");
+                    sendMessage(player, "&eUsage: /rankmanager reload <configFile>");
                     return;
                 }
 
@@ -77,6 +64,7 @@ public class MainCommand extends Command {
                 switch (fileName) {
                     case "config" -> getConfigFile().reload();
                     case "language" -> getLanguageFile().reload();
+                    case "menus" -> getMenusFile().reload();
                     default -> {
                         sendMessage(player, "&cArchivo no encontrado: &f" + fileName);
                         return;

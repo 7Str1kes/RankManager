@@ -1,0 +1,10 @@
+RANK_LIST:
+  - "owner"
+  - "co-owner"
+  - "manager"
+  - "developer"
+  - "admin"
+  - "srmod"
+  - "mod"
+  - "t-mod"
+  - "helper"
